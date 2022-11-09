@@ -8,53 +8,63 @@ package main
 import (
 	"fmt"
 	"math/rand"
+	"os"
 	"time"
 )
 
 var (
-	userInput     int  = 0
-	computerInput int  = 0
-	count         int  = 0
-	min           int  = 1
-	max           int  = 3
-	winner        bool = false
+	userInput     int = 0
+	computerInput int = 0
+	count         int = 0
+	min           int = 1
+	max           int = 3
 )
 
 func main() {
-	i := 10
 	for {
 		userTurn()
 		computerTurn()
-		fmt.Println(i)
-		i++
-		if winner == true {
+	}
+}
+func userTurn() {
+	fmt.Println("User turn:")
+
+	for {
+		fmt.Println("Type a number from 1 to 3: ")
+		fmt.Scanln(&userInput)
+		if (userInput-min)*(userInput-max) <= 0 && count+computerInput <= 21 {
+			count += userInput
+			fmt.Println("Your number:", userInput)
+			fmt.Println("The total is now:", count)
+			fmt.Println("---------------------------------")
+			break
+		} else if !((userInput-min)*(userInput-max) <= 0) {
+			fmt.Println("Invalid number, try again")
+		}
+	}
+	checkForWin("User")
+}
+func computerTurn() {
+	for {
+		rand.Seed(time.Now().UnixNano())
+		computerInput = rand.Intn(max-min+1) + min
+
+		if count+computerInput > 21 {
+			computerInput = rand.Intn(max-min+1) + min
+		} else {
+			count += computerInput
+			fmt.Println("Computer turn:")
+			fmt.Println("The computer choose number:", computerInput)
+			fmt.Println("The total is now:", count)
+			fmt.Println("---------------------------------")
 			break
 		}
 	}
-
-	computerTurn()
+	checkForWin("Computer")
 }
-func userTurn() {
-	fmt.Println("Type a number from 1 to 3: ")
-	fmt.Scanln(&userInput)
-	if (userInput-min)*(userInput-max) <= 0 {
-		count += userInput
-	}
-	fmt.Println("Your number:", userInput)
-	fmt.Println("The total is now:", count)
-
-	checkForWin()
-}
-func computerTurn() {
-	rand.Seed(time.Now().UnixNano())
-	computerInput = rand.Intn(max-min+1) + min
-	fmt.Println(computerInput)
-
-	checkForWin()
-}
-func checkForWin() {
+func checkForWin(player string) {
 	if count == 21 {
-		fmt.Println("Win")
-		return
+		fmt.Println("The", player, "has won.")
+		os.Exit(1)
 	}
 }
