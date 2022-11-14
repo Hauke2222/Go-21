@@ -32,35 +32,31 @@ func userTurn() {
 	for {
 		fmt.Println("Type a number from 1 to 3: ")
 		fmt.Scanln(&userInput)
-		if (userInput-min)*(userInput-max) <= 0 && count+computerInput <= 21 {
+		if (userInput-min)*(userInput-max) <= 0 && count+userInput <= 21 {
 			count += userInput
 			fmt.Println("Your number:", userInput)
 			fmt.Println("The total is now:", count)
 			fmt.Println("---------------------------------")
 			break
-		} else if !((userInput-min)*(userInput-max) <= 0) {
+		} else {
 			fmt.Println("Invalid number, try again")
 		}
 	}
-	checkForWin("User")
+	checkForWin("user")
 }
 func computerTurn() {
-	for {
+	if count >= 18 {
+		computerInput = 21 - count
+	} else {
 		rand.Seed(time.Now().UnixNano())
 		computerInput = rand.Intn(max-min+1) + min
-
-		if count+computerInput > 21 {
-			computerInput = rand.Intn(max-min+1) + min
-		} else {
-			count += computerInput
-			fmt.Println("Computer turn:")
-			fmt.Println("The computer choose number:", computerInput)
-			fmt.Println("The total is now:", count)
-			fmt.Println("---------------------------------")
-			break
-		}
 	}
-	checkForWin("Computer")
+	count += computerInput
+	fmt.Println("Computer turn:")
+	fmt.Println("The computer choose number:", computerInput)
+	fmt.Println("The total is now:", count)
+	fmt.Println("---------------------------------")
+	checkForWin("computer")
 }
 func checkForWin(player string) {
 	if count == 21 {
